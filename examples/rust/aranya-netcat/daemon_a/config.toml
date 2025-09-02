@@ -1,0 +1,13 @@
+name = "daemon"
+runtime_dir = "/Users/matcala/Desktop/internship/aranya/aranya/examples/rust/aranya-netcat/daemon_a/run"
+state_dir = "/Users/matcala/Desktop/internship/aranya/aranya/examples/rust/aranya-netcat/daemon_a/state"
+cache_dir = "/Users/matcala/Desktop/internship/aranya/aranya/examples/rust/aranya-netcat/daemon_a/cache"
+logs_dir = "/Users/matcala/Desktop/internship/aranya/aranya/examples/rust/aranya-netcat/daemon_a/logs"
+config_dir = "/Users/matcala/Desktop/internship/aranya/aranya/examples/rust/aranya-netcat/daemon_a/config"
+
+aqc.enable = true
+
+# graph sync between daemons
+[sync.quic]
+enable = true
+addr = "127.0.0.1:55555"

@@ -1,0 +1,31 @@
+[package]
+name = "aranya-netcat"
+description = "Two instances of Aranya exchanging stdin data over AQC"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[features]
+default = []
+
+[dependencies]
+aranya-client = { workspace = true }
+aranya-daemon-api = { workspace = true }
+aranya-util = { workspace = true }
+
+clap = { version = "4", features = ["derive"] }
+anyhow = { workspace = true }
+backon = { workspace = true }
+buggy = { workspace = true }
+bytes = { workspace = true }
+futures-util = { workspace = true }
+tempfile = { workspace = true }
+tokio = { workspace = true, features = ["io-util", "macros", "net", "process", "sync", "io-std"] }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+
+bincode = { version = "1" }
+serde = { version = "1", features = ["derive"] }

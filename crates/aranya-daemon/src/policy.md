@@ -988,8 +988,15 @@ command SetAqcNetworkName {
 
         // Only Owners and Operators can associate a network name.
         check is_owner(author.role) || is_operator(author.role)
-        // Only Members can be associated a network name.
-        check is_member(device.role)
+        
+        // Only Members can be associated a network name, unless the Owner is assigning to themselves
+        if author.device_id == this.device_id {
+            // Owner can assign network identifier to themselves
+            check is_owner(author.role)
+        } else {
+            // For other devices, only Members can be assigned network identifiers
+            check is_member(device.role)
+        }
 
         let net_id_exists = query AqcMemberNetworkId[device_id: this.device_id]
 
@@ -1023,6 +1030,7 @@ command SetAqcNetworkName {
 **Invariants**:
 
 - Only Owners and Operators can assign AQC network names to Members.
+- Owners can assign AQC network names to themselves.
 - Members can only be assigned to one AQC network name.
 
 ## UnsetAqcNetworkName
@@ -1204,9 +1212,9 @@ command AqcCreateBidiChannel {
         // The label must exist.
         let label = check_unwrap query Label[label_id: this.label_id]
 
-        // Only Members can create AQC channels with other peer Members
-        check is_member(author.role)
-        check is_member(peer.role)
+        // Only Members and Owners can create AQC channels
+        check is_member(author.role) || is_owner(author.role)
+        check is_member(peer.role) || is_owner(peer.role)
 
         // Check that both devices have been assigned to the label and have correct send/recv permissions.
         check can_create_aqc_bidi_channel(author.device_id, peer.device_id, label.label_id)
@@ -1413,9 +1421,9 @@ command AqcCreateUniChannel {
         // The label must exist.
         let label = check_unwrap query Label[label_id: this.label_id]
 
-        // Only Members can create AQC channels with other peer Members
-        check is_member(author.role)
-        check is_member(peer.role)
+        // Only Members and Owners can create AQC channels
+        check is_member(author.role) || is_owner(author.role)
+        check is_member(peer.role) || is_owner(peer.role)
 
         // Check that both devices have been assigned to the label and have correct send/recv permissions.
         check can_create_aqc_uni_channel(this.sender_id, this.receiver_id, label.label_id)
