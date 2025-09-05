@@ -4,7 +4,7 @@ use std::path::PathBuf;
 
 use anyhow::{bail, Result};
 use aranya_client::{
-    aqc::{AqcPeerChannel, AqcPeerStream},
+    aqc::AqcPeerChannel,
     AddTeamConfig, AddTeamQuicSyncConfig, Client, SyncPeerConfig,
 };
 use aranya_cosmos_proxy::{

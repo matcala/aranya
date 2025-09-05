@@ -12,7 +12,6 @@ use aranya_cosmos_proxy::{
     udp_forwarder::UdpForwarder,
 };
 use backon::{ExponentialBuilder, Retryable};
-use bytes::Bytes;
 use clap::Parser;
 use tokio::time::sleep;
 use tracing::info;
