@@ -1,0 +1,11 @@
+VARIABLE tgt_name        UDPTGT
+VARIABLE cmd_port        6200
+VARIABLE tlm_read_port   6201
+
+TARGET <%= tgt_name %> <%= tgt_name %>
+
+# UDP interface signature (Ruby):
+# udp_interface.rb host write_dest_port read_port write_src_port interface_address ttl write_timeout read_timeout
+INTERFACE <%= tgt_name %>_INT udp_interface.rb host.docker.internal <%= cmd_port %> <%= tlm_read_port %> nil nil 128 10.0 nil
+  MAP_CMD_TARGET <%= tgt_name %>     # commands to this target go out on this interface
+  MAP_TLM_TARGET <%= tgt_name %>     # telemetry for this target comes in on this interface

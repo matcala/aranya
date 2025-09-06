@@ -1,0 +1,5 @@
+# One telemetry packet: STATUS (ID==1) + timestamp string
+TELEMETRY UDPTGT STATUS BIG_ENDIAN "1 Hz timestamp"
+  APPEND_ID_ITEM PKT_ID 8 UINT 1 "Packet ID == 1"
+  # A variable-sized string item fills the rest of the packet (one such item allowed)
+  APPEND_ITEM TS 0 STRING "ISO8601 timestamp string"

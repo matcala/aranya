@@ -1,0 +1,4 @@
+# Single command: NOOP
+COMMAND UDPTGT NOOP BIG_ENDIAN "No-op"
+  # One-byte ID field with fixed value so COSMOS can identify this command on the wire
+  APPEND_ID_PARAMETER PACKET_ID 8 UINT 1 1 1 "Packet id"
