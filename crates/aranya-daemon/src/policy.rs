@@ -47,6 +47,7 @@ pub enum Effect {
     AqcNetworkNameUnset(AqcNetworkNameUnset),
     AqcUniChannelCreated(AqcUniChannelCreated),
     AqcUniChannelReceived(AqcUniChannelReceived),
+    CameraTaskReceived(CameraTaskReceived),
     LabelAssigned(LabelAssigned),
     LabelCreated(LabelCreated),
     LabelDeleted(LabelDeleted),
@@ -188,6 +189,11 @@ pub struct AqcUniChannelReceived {
     pub label_id: Id,
     pub encap: Vec<u8>,
     pub psk_length_in_bytes: i64,
+}
+/// CameraTaskReceived policy effect.
+#[effect]
+pub struct CameraTaskReceived {
+    pub task_name: Text,
 }
 /// LabelAssigned policy effect.
 #[effect]
@@ -367,4 +373,5 @@ pub trait ActorExt {
     fn query_device_keybundle(&mut self, device_id: Id) -> Result<(), ClientError>;
     fn query_aqc_net_identifier(&mut self, device_id: Id) -> Result<(), ClientError>;
     fn query_aqc_network_names(&mut self) -> Result<(), ClientError>;
+    fn task_camera(&mut self, task_name: Text, peer_id: Id) -> Result<(), ClientError>;
 }
