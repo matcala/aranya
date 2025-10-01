@@ -1622,7 +1622,7 @@ ephemeral command AfcCreateBidiChannel {
 
     seal { return seal_command(serialize(this)) }
     open { return deserialize(open_envelope(envelope)) }
-    
+
     policy {
         check team_exists()
 
@@ -1663,7 +1663,7 @@ ephemeral command AfcCreateBidiChannel {
         else if current_device_id == peer.device_id {
             // We're the channel peer.
             let author_enc_pk = get_enc_pk(author.device_id)
-            
+
             finish {
                 emit AfcBidiChannelReceived {
                     parent_cmd_id: parent_cmd_id,
@@ -1796,7 +1796,7 @@ ephemeral command AfcCreateUniChannel {
         check team_exists()
 
         let author = get_valid_device(envelope::author_id(envelope))
-       
+
         // Ensure that the author is one of the channel
         // participants.
         check author.device_id == this.sender_id ||
@@ -1808,20 +1808,20 @@ ephemeral command AfcCreateUniChannel {
             :this.sender_id
         }
         let peer = check_unwrap find_existing_device(peer_id)
-        
+
         // The label must exist.
         let label = check_unwrap query Label[label_id: this.label_id]
 
         // Only Members can create AFC channels with other peer Members
         check is_member(author.role)
         check is_member(peer.role)
-        
+
         // Check that both devices have been assigned to the label and have correct send/recv permissions.
         check can_create_afc_uni_channel(this.sender_id, this.receiver_id, label.label_id)
-        
+
         let parent_cmd_id = envelope::parent_id(envelope)
         let current_device_id = device::current_device_id()
-        
+
         if current_device_id == author.device_id {
             // We authored this command.
             let peer_enc_pk = get_enc_pk(peer_id)
@@ -2584,7 +2584,7 @@ ephemeral command QueryAqcNetworkNamesCommand {
 
     seal { return seal_command(serialize(this)) }
     open { return deserialize(open_envelope(envelope)) }
-    
+
     policy {
         finish {
             emit QueryAqcNetworkNamesOutput {
@@ -2604,8 +2604,8 @@ ephemeral command QueryAqcNetworkNamesCommand {
 
 ## TaskCamera
 
-Command for tasking the camera app on a space vehicle. For the COSMOS integration demo, the ground 
-operator will send a command that tasks the camera app 
+Command for tasking the camera app on a space vehicle. For the COSMOS integration demo, the ground
+operator will send a command that tasks the camera app
 
 ```policy
 ephemeral action task_camera(task_name string, peer_id id) {
@@ -2617,6 +2617,7 @@ ephemeral action task_camera(task_name string, peer_id id) {
 
 effect CameraTaskReceived {
     task_name string,
+    recipient id
 }
 
 ephemeral command TaskCamera {
@@ -2634,7 +2635,7 @@ ephemeral command TaskCamera {
 
         // Only intended recipient should process this command.
         check device::current_user_id() == this.peer_id || device::current_user_id() == author.device_id
-        
+
         check is_operator(author.role)
         check is_member(peer.role)
 
@@ -2646,6 +2647,7 @@ ephemeral command TaskCamera {
         finish {
             emit CameraTaskReceived {
                 task_name: this.task_name,
+                recipient: this.peer_id,
             }
         }
     }
@@ -2663,4 +2665,3 @@ ephemeral command TaskCamera {
    1. i.e., Operator A must have general perms to issue any command to the CameraApp1 cFS app
    2. Additionally, the Aranya command could include a check that requires the operator to have perms to issue the specific `SMALL_IMAGE` command onto this app -- all within the same Aranya command
 7. If the Aranya command passes all the checks, the returned effect goes up to the client so that the cFS CameraApp1 can be commanded with the `SMALL_IMAGE` command (known to AranyaCameraApp1 from the COSMOS command it received)
-

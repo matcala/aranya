@@ -194,6 +194,7 @@ pub struct AqcUniChannelReceived {
 #[effect]
 pub struct CameraTaskReceived {
     pub task_name: Text,
+    pub recipient: Id,
 }
 /// LabelAssigned policy effect.
 #[effect]
