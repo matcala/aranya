@@ -443,6 +443,9 @@ pub trait DaemonApi {
         ctrl: AfcCtrl,
     ) -> Result<(LabelId, AfcChannelId, ChanOp)>;
 
+    async fn create_cosmos_ctrl(team: TeamId, name: String) -> Result<Box<[u8]>>;
+    async fn receive_cosmos_ctrl(team: TeamId, name: String, ctrl: Box<[u8]>) -> Result<()>;
+
     /// Query devices on team.
     async fn query_devices_on_team(team: TeamId) -> Result<Vec<DeviceId>>;
     /// Query device role.

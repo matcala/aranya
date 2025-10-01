@@ -2587,3 +2587,22 @@ pub fn afc_channel_delete(
         imp::AfcChannel::Send(c) => Ok(client.rt.block_on(c.delete())?),
     }
 }
+
+pub unsafe fn receive_cosmos_ctrl(
+    client: &Client,
+    team_id: &TeamId,
+    name: *const c_char,
+    ctrl: &[u8],
+) -> Result<(), imp::Error> {
+    // SAFETY: Caller must supply valid pointer.
+    let name = unsafe { CStr::from_ptr(name) };
+    let name = std::str::from_utf8(name.to_bytes())?.to_owned();
+    let ctrl = Box::from(ctrl);
+    client.rt.block_on(
+        client
+            .inner
+            .team(team_id.into())
+            .receive_cosmos_ctrl(name.to_string(), ctrl),
+    )?;
+    Ok(())
+}

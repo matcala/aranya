@@ -973,6 +973,47 @@ impl DaemonApi for Api {
         Err(anyhow!("unable to find AFC effect").into())
     }
 
+    async fn create_cosmos_ctrl(
+        self,
+        _: context::Context,
+        team: api::TeamId,
+        name: String,
+    ) -> api::Result<Box<[u8]>> {
+        self.check_team_valid(team).await?;
+
+        let graph = GraphId::from(team.into_id());
+
+        // let (ctrl, effects) = self
+        //     .client
+        //     .actions(&graph)
+        //     .create_cosmos_ctrl_off_graph(name)
+        //     .await?;
+        // let ctrl = get_single(ctrl)?;
+        // Ok(ctrl)
+
+        todo!()
+    }
+
+    async fn receive_cosmos_ctrl(
+        self,
+        _: context::Context,
+        team: api::TeamId,
+        name: String,
+        ctrl: Box<[u8]>,
+    ) -> api::Result<()> {
+        self.check_team_valid(team).await?;
+
+        let graph = GraphId::from(team.into_id());
+        let mut session = self.client.session_new(&graph).await?;
+
+        let effects = self.client.session_receive(&mut session, &ctrl).await?;
+        self.effect_handler.handle_effects(graph, &effects).await?;
+
+        // TODO: extract name from effect and validate.
+
+        Ok(())
+    }
+
     /// Create a label.
     #[instrument(skip(self), err)]
     async fn create_label(
