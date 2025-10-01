@@ -2400,7 +2400,7 @@ Command for tasking the camera app on a space vehicle. For the COSMOS integratio
 operator will send a command that tasks the camera app 
 
 ```policy
-action task_camera(task_name string, peer_id id) {
+ephemeral action task_camera(task_name string, peer_id id) {
     publish TaskCamera{
         task_name: task_name,
         peer_id: peer_id,
@@ -2411,7 +2411,7 @@ effect CameraTaskReceived {
     task_name string,
 }
 
-command TaskCamera {
+ephemeral command TaskCamera {
     fields {
         task_name string,
         peer_id id,
@@ -2425,7 +2425,7 @@ command TaskCamera {
         let peer = get_valid_device(this.peer_id)
 
         // Only intended recipient should process this command.
-        check device::current_user_id() == this.peer_id
+        check device::current_user_id() == this.peer_id || device::current_user_id() == author.device_id
         
         check is_operator(author.role)
         check is_member(peer.role)
