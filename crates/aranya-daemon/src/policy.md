@@ -2596,8 +2596,10 @@ ephemeral command TaskCamera {
         let author = get_valid_device(envelope::author_id(envelope))
         let peer = get_valid_device(this.peer_id)
 
-        // Only intended recipient should process this command.
-        check device::current_user_id() == this.peer_id || device::current_user_id() == author.device_id
+        let our_id = device::current_user_id()
+
+        // Only author and intended recipient should process this command.
+        check our_id == this.peer_id || our_id == author.device_id
 
         check is_operator(author.role)
         check is_member(peer.role)
@@ -2607,10 +2609,11 @@ ephemeral command TaskCamera {
         //     check ___
         // }
 
-        finish {
-            emit CameraTaskReceived {
-                task_name: this.task_name,
-                recipient: this.peer_id,
+        if our_id == this.peer_id {
+            finish {
+                emit CameraTaskReceived {
+                    task_name: this.task_name,
+                }
             }
         }
     }
