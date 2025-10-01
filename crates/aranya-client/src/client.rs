@@ -502,21 +502,21 @@ impl Team<'_> {
         self.team_id
     }
 
-    pub async fn create_cosmos_ctrl(&self, name: String) -> Result<Box<[u8]>> {
+    pub async fn task_camera(&self, task_name: Text, peer: DeviceId) -> Result<Box<[u8]>> {
         let ctrl = self
             .client
             .daemon
-            .create_cosmos_ctrl(context::current(), self.team_id.__id, name)
+            .task_camera(context::current(), self.team_id.__id, task_name, peer.__id)
             .await
             .map_err(IpcError::new)?
             .map_err(aranya_error)?;
         Ok(ctrl)
     }
 
-    pub async fn receive_cosmos_ctrl(&self, name: String, ctrl: Box<[u8]>) -> Result<()> {
+    pub async fn receive_cosmos_ctrl(&self, task_name: Text, ctrl: Box<[u8]>) -> Result<()> {
         self.client
             .daemon
-            .receive_cosmos_ctrl(context::current(), self.team_id.__id, name, ctrl)
+            .receive_cosmos_ctrl(context::current(), self.team_id.__id, task_name, ctrl)
             .await
             .map_err(IpcError::new)?
             .map_err(aranya_error)?;
