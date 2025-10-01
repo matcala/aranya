@@ -2392,3 +2392,67 @@ ephemeral command QueryAqcNetworkNamesCommand {
 
 - A device's AQC net identifier will only be returned if it was created by `SetAqcNetworkName` and
  wasn't yet removed by `UnsetAqcNetworkName`.
+
+
+## TaskCamera
+
+Command for tasking the camera app on a space vehicle. For the COSMOS integration demo, the ground 
+operator will send a command that tasks the camera app 
+
+```policy
+action task_camera(task_name string, peer_id id) {
+    publish TaskCamera{
+        task_name: task_name,
+        peer_id: peer_id,
+    }
+}
+
+effect CameraTaskReceived {
+    task_name string,
+}
+
+command TaskCamera {
+    fields {
+        task_name string,
+        peer_id id,
+    }
+
+    seal { return seal_command(serialize(this)) }
+    open { return deserialize(open_envelope(envelope)) }
+
+    policy {
+        let author = get_valid_device(envelope::author_id(envelope))
+        let peer = get_valid_device(this.peer_id)
+
+        // Only intended recipient should process this command.
+        check device::current_user_id() == this.peer_id
+        
+        check is_operator(author.role)
+        check is_member(peer.role)
+
+        // TODO: add task-level perms?
+        // if this.task_name == "small_image" {
+        //     check ___
+        // }
+
+        finish {
+            emit CameraTaskReceived {
+                task_name: this.task_name,
+            }
+        }
+    }
+}
+```
+
+
+
+1. Operator A calls COSMOS `SMALL_IMAGE` command for CameraApp1
+2. COSMOS cmd gets routed to Aranya via dispatcher (must include name of target app to Aranya)
+3. Aranya reads the target app from received request and calls the action to create `TaskCameraApp1` (Aranya) command
+4. Aranya receives back the serialized `TaskCameraApp1` (Aranya) command and appends that to the COSMOS `SMALL_IMAGE` command.
+5. COSMOS command received by cFS app: AranyaCameraApp1 which extracts the serialized Aranya command from the COSMOS command and provides it to Aranya via the "accept_eph_cmd" API
+6. The Aranya API deserializes the `TaskCameraApp1` command and processes it against policy, where the author of the command is checked to ensure it is allowed to task this app
+   1. i.e., Operator A must have general perms to issue any command to the CameraApp1 cFS app
+   2. Additionally, the Aranya command could include a check that requires the operator to have perms to issue the specific `SMALL_IMAGE` command onto this app -- all within the same Aranya command
+7. If the Aranya command passes all the checks, the returned effect goes up to the client so that the cFS CameraApp1 can be commanded with the `SMALL_IMAGE` command (known to AranyaCameraApp1 from the COSMOS command it received)
+
