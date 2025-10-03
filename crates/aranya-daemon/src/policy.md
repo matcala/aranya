@@ -2596,7 +2596,7 @@ ephemeral command TaskCamera {
         let author = get_valid_device(envelope::author_id(envelope))
         let peer = get_valid_device(this.peer_id)
 
-        let our_id = device::current_user_id()
+        let our_id = device::current_device_id()
 
         // Only author and intended recipient should process this command.
         check our_id == this.peer_id || our_id == author.device_id
