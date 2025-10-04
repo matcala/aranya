@@ -63,6 +63,18 @@ impl Display for TeamId {
     }
 }
 
+// added to allow parsing from string in demo s
+impl FromStr for TeamId {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> anyhow::Result<Self> {
+        Ok(Self {
+            __id: s.parse::<aranya_daemon_api::TeamId>()?,
+        })
+    }
+}
+
+
 /// An Aranya label ID.
 ///
 /// Both peers must have the same label ID assigned to them before creating a channel between themselves with that label ID.
