@@ -1191,6 +1191,7 @@ dependencies = [
  "buggy",
  "bytes",
  "futures-util",
+ "rustix 0.38.44",
  "serde",
  "serde_json",
  "tempfile",
