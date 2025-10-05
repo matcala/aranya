@@ -1185,6 +1185,7 @@ dependencies = [
  "anyhow",
  "aranya-client",
  "aranya-daemon-api",
+ "aranya-policy-text",
  "aranya-util",
  "axum",
  "backon",
