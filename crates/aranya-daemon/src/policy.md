@@ -2601,7 +2601,7 @@ ephemeral command TaskCamera {
         // Only author and intended recipient should process this command.
         check our_id == this.peer_id || our_id == author.device_id
 
-        check is_operator(author.role)
+        check is_owner(author.role)
         check is_member(peer.role)
 
         // TODO: add task-level perms?

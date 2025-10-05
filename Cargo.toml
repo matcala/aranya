@@ -57,8 +57,8 @@ aranya-runtime = { version = "0.14.0", features = ["std", "libc"] }
 
 buggy = { version = "0.1.0" }
 
-aranya-client = { version = "3.0.0", path = "crates/aranya-client" }
-aranya-daemon = { version = "3.0.0", path = "crates/aranya-daemon" }
+aranya-client = { version = "3.0.0", path = "crates/aranya-client", features = ["preview", "afc", "aqc", "experimental"]}
+aranya-daemon = { version = "3.0.0", path = "crates/aranya-daemon",  features = ["preview", "afc", "aqc", "experimental"]}
 aranya-daemon-api = { version = "3.0.0", path = "crates/aranya-daemon-api" }
 aranya-keygen = { version = "3.0.0", path = "crates/aranya-keygen" }
 aranya-util = { version = "3.0.0", path = "crates/aranya-util" }
