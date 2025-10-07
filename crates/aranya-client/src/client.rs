@@ -50,6 +50,17 @@ impl Display for DeviceId {
     }
 }
 
+// added to allow parsing from string in demo
+impl FromStr for DeviceId {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> anyhow::Result<Self> {
+        Ok(Self {
+            __id: s.parse::<aranya_daemon_api::DeviceId>()?,
+        })
+    }
+}
+
 /// The Team ID (a.k.a Graph ID).
 #[derive(Copy, Clone, Debug)]
 pub struct TeamId {
@@ -63,7 +74,7 @@ impl Display for TeamId {
     }
 }
 
-// added to allow parsing from string in demo s
+// added to allow parsing from string in demo
 impl FromStr for TeamId {
     type Err = anyhow::Error;
 
