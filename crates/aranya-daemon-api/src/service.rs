@@ -407,26 +407,10 @@ pub trait DaemonApi {
     #[cfg(feature = "afc")]
     #[cfg_attr(docsrs, doc(cfg(feature = "afc")))]
     async fn afc_shm_info() -> Result<AfcShmInfo>;
-    /// Create a bidirectional AFC channel.
-    #[cfg(feature = "afc")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "afc")))]
-    async fn create_afc_bidi_channel(
-        team: TeamId,
-        peer_id: DeviceId,
-        label_id: LabelId,
-    ) -> Result<(AfcCtrl, AfcChannelId)>;
     /// Create a unidirectional AFC send-only channel.
     #[cfg(feature = "afc")]
     #[cfg_attr(docsrs, doc(cfg(feature = "afc")))]
     async fn create_afc_uni_send_channel(
-        team: TeamId,
-        peer_id: DeviceId,
-        label_id: LabelId,
-    ) -> Result<(AfcCtrl, AfcChannelId)>;
-    /// Create a unidirectional AFC receive-only channel.
-    #[cfg(feature = "afc")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "afc")))]
-    async fn create_afc_uni_recv_channel(
         team: TeamId,
         peer_id: DeviceId,
         label_id: LabelId,
@@ -438,10 +422,7 @@ pub trait DaemonApi {
     /// Receive AFC ctrl message.
     #[cfg(feature = "afc")]
     #[cfg_attr(docsrs, doc(cfg(feature = "afc")))]
-    async fn receive_afc_ctrl(
-        team: TeamId,
-        ctrl: AfcCtrl,
-    ) -> Result<(LabelId, AfcChannelId, ChanOp)>;
+    async fn receive_afc_ctrl(team: TeamId, ctrl: AfcCtrl) -> Result<(LabelId, AfcChannelId)>;
 
     async fn task_camera(team: TeamId, task_name: Text, peer: DeviceId) -> Result<Box<[u8]>>;
     async fn receive_cosmos_ctrl(team: TeamId, task_name: Text, ctrl: Box<[u8]>) -> Result<()>;
